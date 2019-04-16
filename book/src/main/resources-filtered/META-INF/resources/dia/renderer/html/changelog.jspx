@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
-Copyright (C) 2017  AO Industries, Inc.
+Copyright (C) 2017, 2019  AO Industries, Inc.
     support@aoindustries.com
     7262 Bull Pen Cir
     Mobile, AL 36695
@@ -44,7 +44,7 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 			test="${!fn:startsWith(version, '@')}"
 			message="Version not substituted: #{version}"
 		/>
-		<c:if test="${fn:endsWith(version, '-SNAPSHOT')}">
+		<c:if test="${fn:endsWith(version, '-SNAPSHOT') and !fn:endsWith(version, '-validation-SNAPSHOT')}">
 			<changelog:release
 				projectName="@{documented.name}"
 				version="#{version}"
