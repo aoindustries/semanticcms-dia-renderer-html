@@ -1,6 +1,6 @@
 /*
  * semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
- * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -141,7 +141,7 @@ final public class DiaHtmlRenderer {
 	/**
 	 * Make sure each diagram and scaling is only exported once when under concurrent access.
 	 */
-	private static final ConcurrencyLimiter<File,Void> exportConcurrencyLimiter = new ConcurrencyLimiter<File,Void>();
+	private static final ConcurrencyLimiter<File,Void> exportConcurrencyLimiter = new ConcurrencyLimiter<>();
 
 	public static DiaExport exportDiagram(
 		ServletContext servletContext,
@@ -198,8 +198,7 @@ final public class DiaHtmlRenderer {
 				new Callable<Void>() {
 					@Override
 					public Void call() throws IOException {
-						ResourceConnection conn = resource.open();
-						try {
+						try (ResourceConnection conn = resource.open()) {
 							// TODO: Handle 0 for unknown last modified, similar to properties file auto-loaded by JSP
 							long resourceLastModified = conn.getLastModified();
 							boolean scaleNow;
@@ -265,8 +264,7 @@ final public class DiaHtmlRenderer {
 									// other lines include stuff like: Xlib:  extension "RANDR" missing on display ":0".
 									boolean foundNormalOutput = false;
 									String stderr = result.getStderr();
-									BufferedReader errIn = new BufferedReader(new StringReader(stderr));
-									try {
+									try (BufferedReader errIn = new BufferedReader(new StringReader(stderr))) {
 										String line;
 										while((line = errIn.readLine())!=null) {
 											if(line.equals(normalOutput)) {
@@ -274,8 +272,6 @@ final public class DiaHtmlRenderer {
 												break;
 											}
 										}
-									} finally {
-										errIn.close();
 									}
 									if(!foundNormalOutput) {
 										throw new IOException(diaExePath + ": " + stderr);
@@ -284,8 +280,6 @@ final public class DiaHtmlRenderer {
 								tmpFile.setLastModified(resourceLastModified);
 							}
 							return null;
-						} finally {
-							conn.close();
 						}
 					}
 				}
@@ -395,7 +389,7 @@ final public class DiaHtmlRenderer {
 						final int finalHeight = height;
 						// TODO: Avoid concurrent tasks when all diagrams are already up-to-date?
 						// TODO: Fetch resource file once when first needed?
-						List<Callable<DiaExport>> tasks = new ArrayList<Callable<DiaExport>>(PIXEL_DENSITIES.length);
+						List<Callable<DiaExport>> tasks = new ArrayList<>(PIXEL_DENSITIES.length);
 						for(int i=0; i<PIXEL_DENSITIES.length; i++) {
 							final int pixelDensity = PIXEL_DENSITIES[i];
 							tasks.add(
