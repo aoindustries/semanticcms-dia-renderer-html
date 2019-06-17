@@ -39,5 +39,4 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 		datePublished="2017-08-26T04:46:55-0500"
 		dateModified="${ao:getLastModified('index.html')}"
 	/>
-	<!-- TODO: Pick-up javadocs version, not pom version, in title, here and elsewhere -->
 </jsp:root>
