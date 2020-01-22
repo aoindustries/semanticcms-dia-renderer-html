@@ -1,6 +1,6 @@
 /*
  * semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
- * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -519,7 +519,7 @@ final public class DiaHtmlRenderer {
 							out.write("</a>");
 						}
 						// Write script to hide alt links and select best based on device pixel ratio
-						try (MediaWriter script = html.script().out()) {
+						try (MediaWriter script = html.script().out__()) {
 							// hide alt links
 							//for(int i=1; i<PIXEL_DENSITIES.length; i++) {
 							//	long altLinkNum = altLinkNums[i];
