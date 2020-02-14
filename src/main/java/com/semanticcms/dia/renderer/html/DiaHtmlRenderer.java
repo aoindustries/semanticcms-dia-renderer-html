@@ -26,9 +26,7 @@ import com.aoindustries.awt.image.ImageSizeCache;
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInJavaScriptEncoder.encodeTextInJavaScript;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
-import static com.aoindustries.encoding.TextInXhtmlEncoder.encodeTextInXhtml;
 import com.aoindustries.html.Html;
-import com.aoindustries.html.servlet.HtmlEE;
 import com.aoindustries.io.FileUtils;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
@@ -55,7 +53,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -354,7 +351,7 @@ final public class DiaHtmlRenderer {
 		final ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		Writer out,
+		Html html,
 		Dia dia
 	) throws ServletException, IOException {
 		try {
@@ -363,7 +360,6 @@ final public class DiaHtmlRenderer {
 			if(captureLevel.compareTo(CaptureLevel.META) >= 0) {
 				final ResourceRef resourceRef = ResourceRefResolver.getResourceRef(servletContext, request, dia.getDomain(), dia.getBook(), dia.getPath());
 				if(captureLevel == CaptureLevel.BODY) {
-					Html html = HtmlEE.get(servletContext, request, out);
 					// Use default width when neither provided
 					int width = dia.getWidth();
 					int height = dia.getHeight();
@@ -481,11 +477,11 @@ final public class DiaHtmlRenderer {
 							// Get the thumbnail image in alternate pixel density
 							DiaExport altExport = exports.get(i);
 							// Write the a tag to additional pixel densities
-							out.write("<a id=\"" + ALT_LINK_ID_PREFIX);
+							html.out.write("<a id=\"" + ALT_LINK_ID_PREFIX);
 							long altLinkNum = idSequence.getNextSequenceValue();
 							altLinkNums[i] = altLinkNum;
-							out.write(Long.toString(altLinkNum));
-							out.write("\" style=\"display:none\" href=\"");
+							encodeTextInXhtmlAttribute(Long.toString(altLinkNum), html.out);
+							html.out.write("\" style=\"display:none\" href=\"");
 							final String altUrlPath = buildUrlPath(
 								request,
 								resourceRef,
@@ -496,11 +492,11 @@ final public class DiaHtmlRenderer {
 							);
 							encodeTextInXhtmlAttribute(
 								response.encodeURL(URIEncoder.encodeURI(altUrlPath)),
-								out
+								html.out
 							);
-							out.write("\">x");
-							encodeTextInXhtml(Integer.toString(pixelDensity), out);
-							out.write("</a>");
+							html.out.write("\">x");
+							html.text(pixelDensity);
+							html.out.write("</a>");
 						}
 						// Write script to hide alt links and select best based on device pixel ratio
 						try (MediaWriter script = html.script().out__()) {
