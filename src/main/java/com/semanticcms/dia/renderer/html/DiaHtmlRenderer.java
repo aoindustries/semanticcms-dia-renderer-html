@@ -30,7 +30,7 @@ import com.aoindustries.html.Html;
 import com.aoindustries.io.FileUtils;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
-import com.aoindustries.servlet.http.LastModifiedServlet;
+import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
 import com.aoindustries.util.Sequence;
 import com.aoindustries.util.UnsynchronizedSequence;
 import com.aoindustries.util.WrappedException;
@@ -196,92 +196,89 @@ final public class DiaHtmlRenderer {
 		try {
 			exportConcurrencyLimiter.executeSerialized(
 				tmpFile,
-				new Callable<Void>() {
-					@Override
-					public Void call() throws IOException {
-						try (ResourceConnection conn = resource.open()) {
+				() -> {
+					try (ResourceConnection conn = resource.open()) {
+						// TODO: Handle 0 for unknown last modified, similar to properties file auto-loaded by JSP
+						long resourceLastModified = conn.getLastModified();
+						boolean scaleNow;
+						if(!tmpFile.exists()) {
+							scaleNow = true;
+						} else {
 							// TODO: Handle 0 for unknown last modified, similar to properties file auto-loaded by JSP
-							long resourceLastModified = conn.getLastModified();
-							boolean scaleNow;
-							if(!tmpFile.exists()) {
-								scaleNow = true;
+							long timeDiff = resourceLastModified - tmpFile.lastModified();
+							scaleNow =
+								timeDiff >= FILESYSTEM_TIMESTAMP_TOLERANCE
+								|| timeDiff <= -FILESYSTEM_TIMESTAMP_TOLERANCE // system time reset?
+							;
+						}
+						if(scaleNow) {
+							// Determine size for scaling
+							final String sizeParam;
+							if(width==null) {
+								if(height==null) {
+									sizeParam = null;
+								} else {
+									sizeParam = "x" + height;
+								}
 							} else {
-								// TODO: Handle 0 for unknown last modified, similar to properties file auto-loaded by JSP
-								long timeDiff = resourceLastModified - tmpFile.lastModified();
-								scaleNow =
-									timeDiff >= FILESYSTEM_TIMESTAMP_TOLERANCE
-									|| timeDiff <= -FILESYSTEM_TIMESTAMP_TOLERANCE // system time reset?
-								;
+								if(height==null) {
+									sizeParam = width + "x";
+								} else {
+									sizeParam = width + "x" + height;
+								}
 							}
-							if(scaleNow) {
-								// Determine size for scaling
-								final String sizeParam;
-								if(width==null) {
-									if(height==null) {
-										sizeParam = null;
-									} else {
-										sizeParam = "x" + height;
-									}
-								} else {
-									if(height==null) {
-										sizeParam = width + "x";
-									} else {
-										sizeParam = width + "x" + height;
-									}
-								}
-								// Get the file
-								File diaFile = conn.getFile();
+							// Get the file
+							File diaFile = conn.getFile();
 
-								// Build the command
-								final String diaExePath = getDiaExportPath();
-								final String[] command;
-								if(sizeParam == null) {
-									command = new String[] {
-										diaExePath,
-										"--export=" + tmpFile.getCanonicalPath(),
-										"--filter=png",
-										"--log-to-stderr",
-										diaFile.getCanonicalPath()
-									};
-								} else {
-									command = new String[] {
-										diaExePath,
-										"--export=" + tmpFile.getCanonicalPath(),
-										"--filter=png",
-										"--size=" + sizeParam,
-										"--log-to-stderr",
-										diaFile.getCanonicalPath()
-									};
-								}
-								// Export using dia
-								ProcessResult result = ProcessResult.exec(command);
-								int exitVal = result.getExitVal();
-								if(exitVal != 0) throw new IOException(diaExePath + ": non-zero exit value: " + exitVal);
-								if(!isWindows()) {
-									// Dia does not set non-zero exit value, instead, it writes both errors and normal output to stderr
-									// (Dia version 0.97.2, compiled 23:51:04 Apr 13 2012)
-									String normalOutput = diaFile.getCanonicalPath() + " --> " + tmpFile.getCanonicalPath();
-									// Read the standard error, if any one line matches the expected line, then it is OK
-									// other lines include stuff like: Xlib:  extension "RANDR" missing on display ":0".
-									boolean foundNormalOutput = false;
-									String stderr = result.getStderr();
-									try (BufferedReader errIn = new BufferedReader(new StringReader(stderr))) {
-										String line;
-										while((line = errIn.readLine())!=null) {
-											if(line.equals(normalOutput)) {
-												foundNormalOutput = true;
-												break;
-											}
+							// Build the command
+							final String diaExePath = getDiaExportPath();
+							final String[] command;
+							if(sizeParam == null) {
+								command = new String[] {
+									diaExePath,
+									"--export=" + tmpFile.getCanonicalPath(),
+									"--filter=png",
+									"--log-to-stderr",
+									diaFile.getCanonicalPath()
+								};
+							} else {
+								command = new String[] {
+									diaExePath,
+									"--export=" + tmpFile.getCanonicalPath(),
+									"--filter=png",
+									"--size=" + sizeParam,
+									"--log-to-stderr",
+									diaFile.getCanonicalPath()
+								};
+							}
+							// Export using dia
+							ProcessResult result = ProcessResult.exec(command);
+							int exitVal = result.getExitVal();
+							if(exitVal != 0) throw new IOException(diaExePath + ": non-zero exit value: " + exitVal);
+							if(!isWindows()) {
+								// Dia does not set non-zero exit value, instead, it writes both errors and normal output to stderr
+								// (Dia version 0.97.2, compiled 23:51:04 Apr 13 2012)
+								String normalOutput = diaFile.getCanonicalPath() + " --> " + tmpFile.getCanonicalPath();
+								// Read the standard error, if any one line matches the expected line, then it is OK
+								// other lines include stuff like: Xlib:  extension "RANDR" missing on display ":0".
+								boolean foundNormalOutput = false;
+								String stderr = result.getStderr();
+								try (BufferedReader errIn = new BufferedReader(new StringReader(stderr))) {
+									String line;
+									while((line = errIn.readLine())!=null) {
+										if(line.equals(normalOutput)) {
+											foundNormalOutput = true;
+											break;
 										}
 									}
-									if(!foundNormalOutput) {
-										throw new IOException(diaExePath + ": " + stderr);
-									}
 								}
-								tmpFile.setLastModified(resourceLastModified);
+								if(!foundNormalOutput) {
+									throw new IOException(diaExePath + ": " + stderr);
+								}
 							}
-							return null;
+							tmpFile.setLastModified(resourceLastModified);
 						}
+						return null;
 					}
 				}
 			);
@@ -393,19 +390,14 @@ final public class DiaHtmlRenderer {
 						for(int i=0; i<PIXEL_DENSITIES.length; i++) {
 							final int pixelDensity = PIXEL_DENSITIES[i];
 							tasks.add(
-								new Callable<DiaExport>() {
-									@Override
-									public DiaExport call() throws InterruptedException, IOException {
-										return exportDiagram(
-											servletContext,
-											resourceRef,
-											resource,
-											finalWidth==0 ? null : (finalWidth * pixelDensity),
-											finalHeight==0 ? null : (finalHeight * pixelDensity),
-											tempDir
-										);
-									}
-								}
+								() -> exportDiagram(
+									servletContext,
+									resourceRef,
+									resource,
+									finalWidth==0 ? null : (finalWidth * pixelDensity),
+									finalHeight==0 ? null : (finalHeight * pixelDensity),
+									tempDir
+								)
 							);
 						}
 						try {
