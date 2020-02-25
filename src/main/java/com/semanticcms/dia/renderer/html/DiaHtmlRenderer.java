@@ -35,7 +35,7 @@ import com.aoindustries.util.Sequence;
 import com.aoindustries.util.UnsynchronizedSequence;
 import com.aoindustries.util.WrappedException;
 import com.aoindustries.util.concurrent.ConcurrencyLimiter;
-import com.semanticcms.core.controller.CountConcurrencyListener;
+import com.semanticcms.core.controller.ConcurrencyController;
 import com.semanticcms.core.controller.ResourceRefResolver;
 import com.semanticcms.core.controller.SemanticCMS;
 import com.semanticcms.core.model.BookRef;
@@ -401,7 +401,7 @@ final public class DiaHtmlRenderer {
 							);
 						}
 						try {
-							exports = CountConcurrencyListener.getRecommendedExecutor(servletContext, request).callAll(tasks);
+							exports = ConcurrencyController.getRecommendedExecutor(servletContext, request).callAll(tasks);
 						} catch(ExecutionException e) {
 							Throwable cause = e.getCause();
 							if(cause instanceof RuntimeException) throw ((RuntimeException)cause);
