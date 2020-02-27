@@ -35,7 +35,7 @@ import com.aoindustries.util.Sequence;
 import com.aoindustries.util.UnsynchronizedSequence;
 import com.aoindustries.util.WrappedException;
 import com.aoindustries.util.concurrent.ConcurrencyLimiter;
-import com.semanticcms.core.controller.ConcurrencyController;
+import com.semanticcms.core.controller.ConcurrencyCoordinator;
 import com.semanticcms.core.controller.ResourceRefResolver;
 import com.semanticcms.core.controller.SemanticCMS;
 import com.semanticcms.core.model.BookRef;
@@ -94,7 +94,7 @@ final public class DiaHtmlRenderer {
 	/**
 	 * The request key used to ensure per-request unique element IDs.
 	 */
-	private static final String ID_SEQUENCE_REQUEST_ATTRIBUTE_NAME = DiaHtmlRenderer.class.getName() + ".idSequence";
+	private static final String ID_SEQUENCE_REQUEST_ATTRIBUTE = DiaHtmlRenderer.class.getName() + ".idSequence";
 
 	/**
 	 * The alt link ID prefix.
@@ -401,7 +401,7 @@ final public class DiaHtmlRenderer {
 							);
 						}
 						try {
-							exports = ConcurrencyController.getRecommendedExecutor(servletContext, request).callAll(tasks);
+							exports = ConcurrencyCoordinator.getRecommendedExecutor(servletContext, request).callAll(tasks);
 						} catch(ExecutionException e) {
 							Throwable cause = e.getCause();
 							if(cause instanceof RuntimeException) throw ((RuntimeException)cause);
@@ -413,10 +413,10 @@ final public class DiaHtmlRenderer {
 					// Get the thumbnail image in default pixel density
 					DiaExport export = exports == null ? null : exports.get(0);
 					// Find id sequence
-					Sequence idSequence = (Sequence)request.getAttribute(ID_SEQUENCE_REQUEST_ATTRIBUTE_NAME);
+					Sequence idSequence = (Sequence)request.getAttribute(ID_SEQUENCE_REQUEST_ATTRIBUTE);
 					if(idSequence == null) {
 						idSequence = new UnsynchronizedSequence();
-						request.setAttribute(ID_SEQUENCE_REQUEST_ATTRIBUTE_NAME, idSequence);
+						request.setAttribute(ID_SEQUENCE_REQUEST_ATTRIBUTE, idSequence);
 					}
 					// Write the img tag
 					String refId = PageIndex.getRefIdInPage(request, dia.getPage(), dia.getId());
