@@ -35,8 +35,6 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 	<properties>
 		<!-- These values are copied from the project being documented -->
 		<documented.artifactId>semanticcms-dia-renderer-html</documented.artifactId>
-		<documented.javaVersion>1.8</documented.javaVersion>
-		<documented.javac.link.javaApi>${javac.link.javaApi.jdk8}</documented.javac.link.javaApi>
 		<documented.name>SemanticCMS Dia Renderer HTML²</documented.name>
 		<documented.shortTitle>Renderer HTML</documented.shortTitle>
 		<documented.description>Dia-based diagrams embedded in HTML in a Servlet environment.</documented.description>

@@ -45,8 +45,8 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 				arg.projectStatus="alpha"
 				arg.managementStatus="preview"
 				arg.packagingStatus="developmental"
-				arg.javaVersion="@{documented.javaVersion}"
-				arg.javaeeVersion="6"
+				arg.javaseVersion="@{documented.javase.version}"
+				arg.javaeeVersion="@{documented.javaee.version}"
 				arg.semanticVersioning="2.0.0"
 				arg.license="lgpl-3.0"
 			/>
