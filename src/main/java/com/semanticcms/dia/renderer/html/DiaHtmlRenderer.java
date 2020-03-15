@@ -23,6 +23,7 @@
 package com.semanticcms.dia.renderer.html;
 
 import com.aoindustries.awt.image.ImageSizeCache;
+import com.aoindustries.concurrent.ConcurrencyLimiter;
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInJavaScriptEncoder.encodeTextInJavaScript;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
@@ -34,7 +35,6 @@ import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
 import com.aoindustries.util.Sequence;
 import com.aoindustries.util.UnsynchronizedSequence;
 import com.aoindustries.util.WrappedException;
-import com.aoindustries.util.concurrent.ConcurrencyLimiter;
 import com.semanticcms.core.controller.ConcurrencyCoordinator;
 import com.semanticcms.core.controller.ResourceRefResolver;
 import com.semanticcms.core.controller.SemanticCMS;
