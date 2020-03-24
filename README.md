@@ -30,7 +30,7 @@
 * [Project Home](https://semanticcms.com/dia/renderer/html/)
 * [Changelog](https://semanticcms.com/dia/renderer/html/changelog)
 * [API Docs](https://semanticcms.com/dia/renderer/html/apidocs/)
-* [Maven Central Repository](https://search.maven.org/#search%7Cgav%7C1%7Cg:%22com.semanticcms%22%20AND%20a:%22semanticcms-dia-renderer-html%22)
+* [Maven Central Repository](https://search.maven.org/artifact/com.semanticcms/semanticcms-dia-renderer-html)
 * [GitHub](https://github.com/aoindustries/semanticcms-dia-renderer-html)
 
 ## Contact Us
