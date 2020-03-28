@@ -54,6 +54,11 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 		<tag>HEAD</tag>
 	</scm>
 
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/aoindustries/semanticcms-dia-renderer-html/issues</url>
+	</issueManagement>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Java EE -->
