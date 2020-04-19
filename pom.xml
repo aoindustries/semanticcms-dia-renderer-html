@@ -33,11 +33,11 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 	<packaging>bundle</packaging>
 
 	<properties>
-		<javadoc.breadcrumbs><![CDATA[<a target="_top" href="https://semanticcms.com/">SemanticCMS</a>
-/ <a target="_top" href="https://semanticcms.com/dia/">Dia</a>
-/ <a target="_top" href="${project.url}">${shortTitle}</a>]]></javadoc.breadcrumbs>
+		<javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://semanticcms.com/">SemanticCMS</a>
+/ <a target="${javadoc.target}" href="https://semanticcms.com/dia/">Dia</a>
+/ <a target="${javadoc.target}" href="${project.url}">${shortTitle}</a>]]></javadoc.breadcrumbs>
 		<shortTitle>Renderer HTML</shortTitle>
-		<description.html><![CDATA[<a target="_top" href="https://wiki.gnome.org/Apps/Dia/">Dia-based diagrams</a> embedded in HTML in a Servlet environment.]]></description.html>
+		<description.html><![CDATA[<a target="${javadoc.target}" href="https://wiki.gnome.org/Apps/Dia/">Dia-based diagrams</a> embedded in HTML in a Servlet environment.]]></description.html>
 	</properties>
 
 	<name>SemanticCMS Dia Renderer HTML²</name>
