@@ -185,7 +185,7 @@ final public class DiaHtmlRenderer {
 					+ (width==null ? "_" : width.toString())
 					+ "x"
 					+ (height==null ? "_" : height.toString())
-					+ ".png"
+					+ PNG_EXTENSION
 			);
 			// Make temp directory if needed (and all parents)
 			tmpDir = tmpFile.getParentFile();
