@@ -284,10 +284,9 @@ final public class DiaHtmlRenderer {
 			);
 		} catch(ExecutionException e) {
 			// Maintain expected exception types while not losing stack trace
-			// TODO: Make a specialization for IOException, like done for SQLException?
-			ExecutionExceptions.wrapAndThrowWithCause(e, FileNotFoundException.class, (eeCause, ee) -> {
-				FileNotFoundException fnf = new FileNotFoundException(eeCause.getMessage());
-				fnf.initCause(ee);
+			ExecutionExceptions.wrapAndThrowWithTemplate(e, FileNotFoundException.class, (template, cause) -> {
+				FileNotFoundException fnf = new FileNotFoundException(template.getMessage());
+				fnf.initCause(cause);
 				return fnf;
 			});
 			ExecutionExceptions.wrapAndThrow(e, IOException.class, IOException::new);
