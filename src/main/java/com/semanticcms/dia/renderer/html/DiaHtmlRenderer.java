@@ -1,6 +1,6 @@
 /*
  * semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
- * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -27,7 +27,7 @@ import com.aoindustries.concurrent.KeyedConcurrencyReducer;
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
 import com.aoindustries.exception.WrappedException;
-import com.aoindustries.html.Html;
+import com.aoindustries.html.Document;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
 import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
@@ -352,7 +352,7 @@ final public class DiaHtmlRenderer {
 		final ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		Html html,
+		Document document,
 		Dia dia
 	) throws ServletException, IOException {
 		try {
@@ -438,7 +438,7 @@ final public class DiaHtmlRenderer {
 							+ MISSING_IMAGE_PATH
 						;
 					}
-					html.img()
+					document.img()
 						.id(refId)
 						.src(response.encodeURL(URIEncoder.encodeURI(urlPath)))
 						.width(
@@ -471,11 +471,11 @@ final public class DiaHtmlRenderer {
 							// Get the thumbnail image in alternate pixel density
 							DiaExport altExport = exports.get(i);
 							// Write the a tag to additional pixel densities
-							html.out.write("<a id=\"" + ALT_LINK_ID_PREFIX);
+							document.out.write("<a id=\"" + ALT_LINK_ID_PREFIX);
 							long altLinkNum = idSequence.getNextSequenceValue();
 							altLinkNums[i] = altLinkNum;
-							encodeTextInXhtmlAttribute(Long.toString(altLinkNum), html.out);
-							html.out.write("\" style=\"display:none\" href=\"");
+							encodeTextInXhtmlAttribute(Long.toString(altLinkNum), document.out);
+							document.out.write("\" style=\"display:none\" href=\"");
 							final String altUrlPath = buildUrlPath(
 								request,
 								resourceRef,
@@ -486,14 +486,14 @@ final public class DiaHtmlRenderer {
 							);
 							encodeTextInXhtmlAttribute(
 								response.encodeURL(URIEncoder.encodeURI(altUrlPath)),
-								html.out
+								document.out
 							);
-							html.out.write("\">x");
-							html.text(pixelDensity);
-							html.out.write("</a>");
+							document.out.write("\">x");
+							document.text(pixelDensity);
+							document.out.write("</a>");
 						}
 						// Write script to hide alt links and select best based on device pixel ratio
-						try (MediaWriter script = html.script().out__()) {
+						try (MediaWriter script = document.script().out__()) {
 							// hide alt links
 							//for(int i=1; i<PIXEL_DENSITIES.length; i++) {
 							//	long altLinkNum = altLinkNums[i];
