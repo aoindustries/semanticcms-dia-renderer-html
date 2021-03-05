@@ -256,7 +256,7 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 				<groupId>com.aoindustries</groupId><artifactId>ao-concurrent</artifactId><version>3.1.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>3.5.1${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>3.6.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-fluent-html</artifactId><version>0.4.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
