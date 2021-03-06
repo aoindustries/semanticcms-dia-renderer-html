@@ -25,9 +25,11 @@ package com.semanticcms.dia.renderer.html;
 import com.aoindustries.awt.image.ImageSizeCache;
 import com.aoindustries.concurrent.KeyedConcurrencyReducer;
 import com.aoindustries.encoding.MediaWriter;
-import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
 import com.aoindustries.exception.WrappedException;
-import com.aoindustries.html.Document;
+import com.aoindustries.html.A_factory;
+import com.aoindustries.html.IMG_factory;
+import com.aoindustries.html.PhrasingContent;
+import com.aoindustries.html.SCRIPT_factory;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
 import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
@@ -348,11 +350,14 @@ final public class DiaHtmlRenderer {
 		return urlPath.toString();
 	}
 
-	public static void writeDiaImpl(
-		final ServletContext servletContext,
+	/**
+	 * @param <__>  {@link PhrasingContent} provides {@link IMG_factory}, {@link A_factory}, and {@link SCRIPT_factory}.
+	 */
+	public static <__ extends PhrasingContent<__>> void writeDiaImpl(
+		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		Document document,
+		__ content,
 		Dia dia
 	) throws ServletException, IOException {
 		try {
@@ -438,7 +443,7 @@ final public class DiaHtmlRenderer {
 							+ MISSING_IMAGE_PATH
 						;
 					}
-					document.img()
+					content.img()
 						.id(refId)
 						.src(response.encodeURL(URIEncoder.encodeURI(urlPath)))
 						.width(
@@ -454,7 +459,7 @@ final public class DiaHtmlRenderer {
 							? height
 							: (MISSING_IMAGE_HEIGHT * width / MISSING_IMAGE_WIDTH)
 						).alt(dia.getLabel())
-						.__();
+					.__();
 					//if(resourceFile == null) {
 					//	LinkImpl.writeBrokenPathInXhtmlAttribute(pageRef, out);
 					//} else {
@@ -471,11 +476,8 @@ final public class DiaHtmlRenderer {
 							// Get the thumbnail image in alternate pixel density
 							DiaExport altExport = exports.get(i);
 							// Write the a tag to additional pixel densities
-							document.out.write("<a id=\"" + ALT_LINK_ID_PREFIX);
 							long altLinkNum = idSequence.getNextSequenceValue();
 							altLinkNums[i] = altLinkNum;
-							encodeTextInXhtmlAttribute(Long.toString(altLinkNum), document.out);
-							document.out.write("\" style=\"display:none\" href=\"");
 							final String altUrlPath = buildUrlPath(
 								request,
 								resourceRef,
@@ -484,16 +486,16 @@ final public class DiaHtmlRenderer {
 								pixelDensity,
 								altExport
 							);
-							encodeTextInXhtmlAttribute(
-								response.encodeURL(URIEncoder.encodeURI(altUrlPath)),
-								document.out
+							content.a()
+								.id(id -> id.append(ALT_LINK_ID_PREFIX).append(Long.toString(altLinkNum)))
+								.style("display:none")
+								.href(response.encodeURL(URIEncoder.encodeURI(altUrlPath)))
+							.__(a -> a
+								.text('x').text(pixelDensity)
 							);
-							document.out.write("\">x");
-							document.text(pixelDensity);
-							document.out.write("</a>");
 						}
 						// Write script to hide alt links and select best based on device pixel ratio
-						try (MediaWriter script = document.script().out__()) {
+						try (MediaWriter script = content.script().out__()) {
 							// hide alt links
 							//for(int i=1; i<PIXEL_DENSITIES.length; i++) {
 							//	long altLinkNum = altLinkNums[i];
@@ -519,7 +521,7 @@ final public class DiaHtmlRenderer {
 									script.write(") ");
 								}
 								script.append("{\n"
-										+ "\t\t\t\tdocument.getElementById(").text(refId).append("\").src = document.getElementById(\"" + ALT_LINK_ID_PREFIX).append(Long.toString(altLinkNum)).append("\").getAttribute(\"href\");\n"
+										+ "\t\t\t\tdocument.getElementById(").text(refId).append(").src = document.getElementById(\"" + ALT_LINK_ID_PREFIX).append(Long.toString(altLinkNum)).append("\").getAttribute(\"href\");\n"
 										+ "\t\t\t}\n");
 							}
 							script.write("\t\t}\n"
