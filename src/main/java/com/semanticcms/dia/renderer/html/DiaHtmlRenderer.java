@@ -539,7 +539,7 @@ final public class DiaHtmlRenderer {
 							}
 							script.write("\t\t}\n"
 								+ "\t})();\n"
-								+ "}\n");
+								+ "}");
 						}
 					}
 				}
