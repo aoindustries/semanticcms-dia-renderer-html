@@ -27,6 +27,7 @@ import com.aoindustries.concurrent.KeyedConcurrencyReducer;
 import com.aoindustries.encoding.MediaWriter;
 import com.aoindustries.exception.WrappedException;
 import com.aoindustries.html.A_factory;
+import com.aoindustries.html.AnyDocument;
 import com.aoindustries.html.IMG_factory;
 import com.aoindustries.html.PhrasingContent;
 import com.aoindustries.html.SCRIPT_factory;
@@ -144,7 +145,7 @@ final public class DiaHtmlRenderer {
 	/**
 	 * Make sure each diagram and scaling is only exported once when under concurrent access.
 	 */
-	private static final KeyedConcurrencyReducer<File,Void> exportConcurrencyLimiter = new KeyedConcurrencyReducer<>();
+	private static final KeyedConcurrencyReducer<File, Void> exportConcurrencyLimiter = new KeyedConcurrencyReducer<>();
 
 	public static DiaExport exportDiagram(
 		ServletContext servletContext,
@@ -351,9 +352,12 @@ final public class DiaHtmlRenderer {
 	}
 
 	/**
-	 * @param <__>  {@link PhrasingContent} provides {@link IMG_factory}, {@link A_factory}, and {@link SCRIPT_factory}.
+	 * @param  <__>  {@link PhrasingContent} provides {@link IMG_factory}, {@link A_factory}, and {@link SCRIPT_factory}.
 	 */
-	public static <__ extends PhrasingContent<__>> void writeDiaImpl(
+	public static <
+		D extends AnyDocument<D>,
+		__ extends PhrasingContent<D, __>
+	> void writeDiaImpl(
 		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
