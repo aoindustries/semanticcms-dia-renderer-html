@@ -26,11 +26,11 @@ import com.aoindustries.awt.image.ImageSizeCache;
 import com.aoindustries.concurrent.KeyedConcurrencyReducer;
 import com.aoindustries.encoding.MediaWriter;
 import com.aoindustries.exception.WrappedException;
-import com.aoindustries.html.A_factory;
+import com.aoindustries.html.A;
 import com.aoindustries.html.AnyDocument;
-import com.aoindustries.html.IMG_factory;
+import com.aoindustries.html.IMG;
 import com.aoindustries.html.PhrasingContent;
-import com.aoindustries.html.SCRIPT_factory;
+import com.aoindustries.html.SCRIPT;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
 import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
@@ -352,7 +352,7 @@ final public class DiaHtmlRenderer {
 	}
 
 	/**
-	 * @param  <__>  {@link PhrasingContent} provides {@link IMG_factory}, {@link A_factory}, and {@link SCRIPT_factory}.
+	 * @param  <__>  {@link PhrasingContent} provides {@link IMG}, {@link A}, and {@link SCRIPT}.
 	 */
 	public static <
 		D extends AnyDocument<D>,
