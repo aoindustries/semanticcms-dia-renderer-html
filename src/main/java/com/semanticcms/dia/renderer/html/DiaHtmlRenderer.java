@@ -26,11 +26,11 @@ import com.aoindustries.awt.image.ImageSizeCache;
 import com.aoindustries.concurrent.KeyedConcurrencyReducer;
 import com.aoindustries.encoding.MediaWriter;
 import com.aoindustries.exception.WrappedException;
-import com.aoindustries.html.A;
-import com.aoindustries.html.AnyDocument;
-import com.aoindustries.html.IMG;
-import com.aoindustries.html.PhrasingContent;
-import com.aoindustries.html.SCRIPT;
+import com.aoindustries.html.any.AnyA;
+import com.aoindustries.html.any.AnyDocument;
+import com.aoindustries.html.any.AnyIMG;
+import com.aoindustries.html.any.AnyPhrasingContent;
+import com.aoindustries.html.any.AnySCRIPT;
 import com.aoindustries.lang.ProcessResult;
 import com.aoindustries.net.URIEncoder;
 import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
@@ -352,11 +352,11 @@ final public class DiaHtmlRenderer {
 	}
 
 	/**
-	 * @param  <__>  {@link PhrasingContent} provides {@link IMG}, {@link A}, and {@link SCRIPT}.
+	 * @param  <__>  {@link AnyPhrasingContent} provides {@link AnyIMG}, {@link AnyA}, and {@link AnySCRIPT}.
 	 */
 	public static <
 		D extends AnyDocument<D>,
-		__ extends PhrasingContent<D, __>
+		__ extends AnyPhrasingContent<D, __>
 	> void writeDiaImpl(
 		ServletContext servletContext,
 		HttpServletRequest request,
