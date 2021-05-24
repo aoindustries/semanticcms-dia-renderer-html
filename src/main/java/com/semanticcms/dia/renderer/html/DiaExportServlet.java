@@ -1,6 +1,6 @@
 /*
  * semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
- * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -152,7 +152,7 @@ public class DiaExportServlet extends HttpServlet {
 			response.resetBuffer();
 			response.setContentType(ContentType.PNG);
 			long length = thumbnail.getTmpFile().length();
-			if(length>0 && length<=Integer.MAX_VALUE) response.setContentLength((int)length);
+			if(length > 0) response.setContentLengthLong(length);
 			OutputStream out = response.getOutputStream();
 			FileUtils.copy(thumbnail.getTmpFile(), out);
 		}

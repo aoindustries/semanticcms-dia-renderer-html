@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 semanticcms-dia-renderer-html - Dia-based diagrams embedded in HTML in a Servlet environment.
-Copyright (C) 2017, 2019, 2020  AO Industries, Inc.
+Copyright (C) 2017, 2019, 2020, 2021  AO Industries, Inc.
     support@aoindustries.com
     7262 Bull Pen Cir
     Mobile, AL 36695
@@ -37,7 +37,7 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 	<core:page
 		title="@{documented.name} ${ao:getProjectVersion('./', 'com.semanticcms', 'semanticcms-dia-renderer-html', '¿@{project.version}?')} API Docs"
 		shortTitle="API Docs"
-		datePublished="2017-08-26T04:46:55-0500"
+		datePublished="2017-08-26T04:46:55-05:00"
 		dateModified="${ao:getLastModified('index.html')}"
 	/>
 </jsp:root>
