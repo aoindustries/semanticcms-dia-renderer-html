@@ -22,20 +22,20 @@
  */
 package com.semanticcms.dia.renderer.html;
 
-import com.aoindustries.awt.image.ImageSizeCache;
-import com.aoindustries.concurrent.KeyedConcurrencyReducer;
-import com.aoindustries.encoding.MediaWriter;
-import com.aoindustries.exception.WrappedException;
-import com.aoindustries.html.any.AnyA;
-import com.aoindustries.html.any.AnyIMG;
-import com.aoindustries.html.any.AnyPhrasingContent;
-import com.aoindustries.html.any.AnySCRIPT;
-import com.aoindustries.lang.ProcessResult;
-import com.aoindustries.net.URIEncoder;
-import com.aoindustries.servlet.lastmodified.LastModifiedServlet;
-import com.aoindustries.util.Sequence;
-import com.aoindustries.util.UnsynchronizedSequence;
-import com.aoindustries.util.concurrent.ExecutionExceptions;
+import com.aoapps.concurrent.KeyedConcurrencyReducer;
+import com.aoapps.encoding.MediaWriter;
+import com.aoapps.hodgepodge.awt.image.ImageSizeCache;
+import com.aoapps.html.any.AnyA;
+import com.aoapps.html.any.AnyIMG;
+import com.aoapps.html.any.AnyPhrasingContent;
+import com.aoapps.html.any.AnySCRIPT;
+import com.aoapps.lang.ProcessResult;
+import com.aoapps.lang.concurrent.ExecutionExceptions;
+import com.aoapps.lang.exception.WrappedException;
+import com.aoapps.lang.util.Sequence;
+import com.aoapps.lang.util.UnsynchronizedSequence;
+import com.aoapps.net.URIEncoder;
+import com.aoapps.servlet.lastmodified.LastModifiedServlet;
 import com.semanticcms.core.controller.ConcurrencyCoordinator;
 import com.semanticcms.core.controller.ResourceRefResolver;
 import com.semanticcms.core.controller.SemanticCMS;

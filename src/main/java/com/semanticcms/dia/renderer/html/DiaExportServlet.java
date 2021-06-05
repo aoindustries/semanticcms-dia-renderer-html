@@ -22,10 +22,10 @@
  */
 package com.semanticcms.dia.renderer.html;
 
-import com.aoindustries.io.ContentType;
-import com.aoindustries.io.FileUtils;
-import com.aoindustries.net.Path;
-import com.aoindustries.validation.ValidationException;
+import com.aoapps.lang.io.ContentType;
+import com.aoapps.lang.io.FileUtils;
+import com.aoapps.lang.validation.ValidationException;
+import com.aoapps.net.Path;
 import com.semanticcms.core.controller.Book;
 import com.semanticcms.core.controller.SemanticCMS;
 import com.semanticcms.core.model.BookRef;
