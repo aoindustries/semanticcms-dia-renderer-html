@@ -38,6 +38,10 @@ along with semanticcms-dia-renderer-html.  If not, see <http://www.gnu.org/licen
 / <a target="${javadoc.target}" href="https://semanticcms.com/dia/">Dia</a>
 / <a target="${javadoc.target}" href="${project.url}">Renderer HTML</a>]]></javadoc.breadcrumbs>
 		<description.html><![CDATA[<a target="${javadoc.target}" href="https://wiki.gnome.org/Apps/Dia/">Dia-based diagrams</a> embedded in HTML in a Servlet environment.]]></description.html>
+		<!-- SonarCloud.io -->
+		<sonar.projectKey>${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.organization>aoindustries</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<name>SemanticCMS Dia Renderer HTML²</name>
